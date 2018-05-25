@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Model.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2012" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="ModelStoreContainer">
+    <EntitySet Name="Appointments" EntityType="Model.Store.Appointments" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Users" EntityType="Model.Store.Users" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="UserAppointment" Association="Model.Store.UserAppointment">
+      <End Role="User" EntitySet="Users" />
+      <End Role="Appointment" EntitySet="Appointments" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Appointments">
+    <Key>
+      <PropertyRef Name="Id_Appointment" />
+    </Key>
+    <Property Name="Id_Appointment" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Id_User" Type="int" Nullable="false" />
+    <Property Name="Clinic" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Doctor" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="AppointmentTime" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="CreationTime" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Users">
+    <Key>
+      <PropertyRef Name="Id_User" />
+    </Key>
+    <Property Name="Id_User" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="nameOfUser" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="loginName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="pw" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="address" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="email" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="phone" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <Association Name="UserAppointment">
+    <End Role="User" Type="Model.Store.Users" Multiplicity="1" />
+    <End Role="Appointment" Type="Model.Store.Appointments" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="Id_User" />
+      </Principal>
+      <Dependent Role="Appointment">
+        <PropertyRef Name="Id_User" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>
