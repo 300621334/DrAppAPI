@@ -11,9 +11,11 @@ namespace DrAppAPI
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class Appointment
     {
+        [Key]
         public int Id_Appointment { get; set; }
         public int Id_User { get; set; }
         public string Clinic { get; set; }

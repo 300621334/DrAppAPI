@@ -92,6 +92,7 @@ namespace DrAppAPI.Controllers
         [Route("api/values/Appointments/{user_id}")]
         public IHttpActionResult GetAllAppoints(int user_id)
         {
+            //return Ok("OK");
             using (var db = new ModelContainer())
             {
                 /*Eager Loading : https://msdn.microsoft.com/en-us/library/jj574232(v=vs.113).aspx
@@ -108,20 +109,56 @@ namespace DrAppAPI.Controllers
                 return Ok(allAppoints.ToList());
             }
         }
-        
-        /*
-        //POST - Edit Appoint
-        [Route("api/values/UpdateAppoint")]
-        public IHttpActionResult PutEditAppoint(int id, [FromBody] UserBio userBio)
-        {
-            return Ok(0);//login fail
-        }
-        */
 
-        // PUT api/values/5
-        public void Put(int id, [FromBody]string value)
+
+
+        // POST - update appointment
+        //{domain/ip+port}/api/values/UpdateAppoint/5=appoint ID
+        [Route("api/values/UpdateAppoint/{id_app}")]
+        public IHttpActionResult PostEditAppoint(int id_app, [FromBody]Appointment updatedApp)// = modified existing appointment
         {
+            /*
+            //chk if appoint time has another appoint within 30 min before it
+            DateTime timeFrom, timeTo;
+            timeTo = DateTime.Parse(appoint.AppointmentTime);
+            timeFrom = timeTo.AddMinutes(-30);
+            */
+            using (var db = new ModelContainer())
+            {
+                var existingApp = db.Appointments.SingleOrDefault(a => a.Id_Appointment == id_app);
+                if(null != existingApp)
+                {
+                    existingApp.AppointmentTime = updatedApp.AppointmentTime;
+                    existingApp.Clinic = updatedApp.Clinic;
+                    existingApp.Doctor = updatedApp.Doctor;
+
+
+                    db.SaveChanges();
+                    return Ok(existingApp.Id_Appointment + " updated successfully");
+                }
+                return Ok("Could not update appointment! - Please call clinic");//fail
+            }
+
         }
+
+        
+       //POST - Delete appointment
+       [Route("api/values/DeleteAppointment/{id}")]
+       public IHttpActionResult PostEditAppoint([FromUri]int id)
+       {
+            using (var db = new ModelContainer())
+            {
+                var existingApp = db.Appointments.SingleOrDefault(a => a.Id_Appointment == id);
+                if (null != existingApp)
+                {
+                    db.Entry(existingApp).State = EntityState.Deleted;
+                    db.SaveChanges();
+                    return Ok(existingApp.Id_Appointment + " Deleted successfully");
+                }
+                return Ok("Could not DELETE appointment! - Please call clinic");//fail
+            }
+        }
+
 
         // DELETE api/values/5
         public void Delete(int id)

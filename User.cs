@@ -11,7 +11,8 @@ namespace DrAppAPI
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class User
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -19,7 +20,8 @@ namespace DrAppAPI
         {
             this.Appointments = new HashSet<Appointment>();
         }
-    
+
+        [Key]
         public int Id_User { get; set; }
         public string nameOfUser { get; set; }
         public string loginName { get; set; }
