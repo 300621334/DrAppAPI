@@ -16,6 +16,7 @@
     <EntitySetMapping Name="Users">
       <EntityTypeMapping TypeName="IsTypeOf(Model.User)">
         <MappingFragment StoreEntitySet="Users">
+          <ScalarProperty Name="role" ColumnName="role" />
           <ScalarProperty Name="Id_User" ColumnName="Id_User" />
           <ScalarProperty Name="nameOfUser" ColumnName="nameOfUser" />
           <ScalarProperty Name="loginName" ColumnName="loginName" />

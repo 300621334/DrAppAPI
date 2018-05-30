@@ -20,7 +20,7 @@ namespace DrAppAPI
         {
             this.Appointments = new HashSet<Appointment>();
         }
-
+    
         [Key]
         public int Id_User { get; set; }
         public string nameOfUser { get; set; }
@@ -29,6 +29,7 @@ namespace DrAppAPI
         public string address { get; set; }
         public string email { get; set; }
         public string phone { get; set; }
+        public string role { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Appointment> Appointments { get; set; }

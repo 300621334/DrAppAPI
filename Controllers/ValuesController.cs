@@ -6,6 +6,21 @@ using System.Net.Http;
 using System.Web.Http;
 using DrAppAPI.Models;
 using System.Data.Entity;
+/// <summary>
+/// If a col has auto-assigned constraint name, u can find that name by attempting to drop that col & the err msg will tell u the name of constraint
+/// alter table dbo.users drop column [role];
+/// err: Failed to execute query. Error: The object 'DF__Users__role__5535A963' is dependent on column 'role'.
+/// some other sql:
+/// 
+///alter table dbo.users drop column[role];
+///alter table users drop "DF__Users__role__5441852A";
+///alter table users add default '1' for role;
+///select* from users
+///insert into users(nameofuser, loginname, pw, address, email, phone)
+///values('name7','name7','name7','name7','name7@e.e',777);
+///update users set role = 1
+/// </summary>
+
 
 namespace DrAppAPI.Controllers
 {
@@ -58,7 +73,7 @@ namespace DrAppAPI.Controllers
                 }
                 else
                 {
-                    User newUser = new DrAppAPI.User() { loginName=u.loginName, address=u.address, email=u.email, nameOfUser=u.nameOfUser, phone =u.phone, pw=u.pw };
+                    User newUser = new DrAppAPI.User() { loginName=u.loginName, address=u.address, email=u.email, nameOfUser=u.nameOfUser, phone =u.phone, pw=u.pw, role=u.role };
                     db.Users.Add(newUser);
                     db.SaveChanges();
 

@@ -60,3 +60,4 @@ C:\Users\Shafi\Documents\Visual Studio 2015\Projects\DrAppAPI\DrAppAPI\bin\Syste
 C:\Users\Shafi\Documents\Visual Studio 2015\Projects\DrAppAPI\DrAppAPI\bin\Antlr3.Runtime.pdb
 C:\Users\Shafi\Documents\Visual Studio 2015\Projects\DrAppAPI\DrAppAPI\obj\Debug\DrAppAPI.dll
 C:\Users\Shafi\Documents\Visual Studio 2015\Projects\DrAppAPI\DrAppAPI\obj\Debug\DrAppAPI.pdb
+C:\Users\Shafi\Documents\Visual Studio 2015\Projects\DrAppAPI\DrAppAPI\obj\Debug\DrAppAPI.csprojResolveAssemblyReference.cache
