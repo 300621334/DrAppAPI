@@ -123,7 +123,7 @@ namespace DrAppAPI.Controllers
                 */
 
                 //.Include() reqd using System.Data.Entity;
-                var allAppoints = db.Users.Where(x => x.Id_User == user_id).Include(u=>u.Appointments); //all appoints for a user
+                var allAppoints = db.Users.Where(x => x.Id_User == user_id).Include(u=>u.Appointments); //Loada a user along w navigational prop "Appointments"
                 return Ok(allAppoints.ToList());
             }
         }
@@ -159,7 +159,7 @@ namespace DrAppAPI.Controllers
 
                 //.Include() reqd using System.Data.Entity;
                 var DrName = db.Users.Where(x => x.Id_User == user_id).Select(n=>n.nameOfUser).FirstOrDefault(); //.Include(u => u.Appointments); //all appoints for a user
-                var allAppoints = db.Appointments.Where(a => a.Doctor == DrName).ToList();//.Select(a=> Mapper.Map<DrAppAPI.Appointment, Appointment>(a));
+                var allAppoints = db.Appointments.Where(a => a.Doctor == DrName).Include(a=>a.User);//.Select(a=> Mapper.Map<DrAppAPI.Appointment, Appointment>(a));
 
                 foreach (var item in allAppoints)
                 {
@@ -181,6 +181,7 @@ namespace DrAppAPI.Controllers
 
                     //app = mapper.Map<DrAppAPI.Models.Appointment>(item);
                     app = Mapper.Map<DrAppAPI.Appointment, DrAppAPI.Models.Appointment>(item);
+                    app.PatientName = item.User.nameOfUser;
                     drApps.Appointments.Add(app);
 
                 }

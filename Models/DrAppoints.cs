@@ -7,6 +7,6 @@ namespace DrAppAPI.Models
 {
     public class DrAppoints
     {
-        public List<Appointment> Appointments;
+        public List<DrAppAPI.Models.Appointment> Appointments;
     }
 }
