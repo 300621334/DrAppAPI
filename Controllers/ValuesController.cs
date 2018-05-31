@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Web.Http;
 using DrAppAPI.Models;
 using System.Data.Entity;
+using AutoMapper;
 /// <summary>
 /// If a col has auto-assigned constraint name, u can find that name by attempting to drop that col & the err msg will tell u the name of constraint
 /// alter table dbo.users drop column [role];
@@ -50,11 +51,13 @@ namespace DrAppAPI.Controllers
         {
             using (ModelContainer db = new ModelContainer())
             {
-                var user_id = db.Users.Where(x => x.loginName == userBio.loginName && x.pw == userBio.pw).Select(a => a.Id_User).FirstOrDefault();//.Any(x => x.loginName == loginPw.login && x.pw == loginPw.pw);
-
+                var u = db.Users.Where(x => x.loginName == userBio.loginName && x.pw == userBio.pw).FirstOrDefault();
+                var user_id = u.Id_User; //db.Users.Where(x => x.loginName == userBio.loginName && x.pw == userBio.pw).Select(a => a.Id_User).FirstOrDefault();//.Any(x => x.loginName == loginPw.login && x.pw == loginPw.pw);
+                UserBio userToBeReturned = new UserBio() {  Id_User = u.Id_User, address=u.address, email=u.email, loginName=u.loginName, nameOfUser=u.nameOfUser, phone=u.phone, pw=u.pw, role=u.role};
                 if (user_id > 0)
                 {
-                    return Ok(user_id);//login success
+                    //navigation property interferes w serialization
+                    return Ok(userToBeReturned);//login success
                 }
             }
             return Ok(0);//login fail
@@ -103,7 +106,7 @@ namespace DrAppAPI.Controllers
             }
         }
 
-        //POST - All appoints
+        //POST - All appoints for a patient
         [Route("api/values/Appointments/{user_id}")]
         public IHttpActionResult GetAllAppoints(int user_id)
         {
@@ -125,7 +128,98 @@ namespace DrAppAPI.Controllers
             }
         }
 
+        //POST - All appoints for a Dr
+        [Route("api/values/AppointmentsForDr/{user_id}")]
+        public IHttpActionResult GetAllAppointsForDr(int user_id)
+        {
+            //IQueryable<Appointment> allAppoints;
+            DrAppoints DrApps = new DrAppoints();
+            
 
+            //return Ok("OK");
+            using (var db = new ModelContainer())
+            {
+                db.Configuration.ProxyCreationEnabled = false;//solves Proxies err:"Error getting value from 'User' on 'System.Data.Entity.DynamicProxies.Appointment_A75CD158D84F..."
+                //https://stackoverflow.com/questions/13077328/serialization-of-entity-framework-objects-with-one-to-many-relationship?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
+
+                //ViewModel
+                DrAppoints drApps = new DrAppoints();
+                drApps.Appointments = new List<Models.Appointment>();
+                DrAppAPI.Models.Appointment app;
+
+
+
+                //Auto Map bw DbContext objs & ViewModel objs(aka DTO = Data Transfer Objects): http://automapper.readthedocs.io/en/latest/Getting-started.html
+                Mapper.Initialize(cfg => cfg.CreateMap<DrAppAPI.Appointment, DrAppAPI.Models.Appointment>());
+                /*
+                ////or - to use instance instead of Static - do as below:
+                var config = new AutoMapper.MapperConfiguration(cfg => cfg.CreateMap<DrAppAPI.Appointment, DrAppAPI.Models.Appointment>());
+                var mapper = config.CreateMapper();//or: = new Mapper(config);
+                */
+
+                //.Include() reqd using System.Data.Entity;
+                var DrName = db.Users.Where(x => x.Id_User == user_id).Select(n=>n.nameOfUser).FirstOrDefault(); //.Include(u => u.Appointments); //all appoints for a user
+                var allAppoints = db.Appointments.Where(a => a.Doctor == DrName).ToList();//.Select(a=> Mapper.Map<DrAppAPI.Appointment, Appointment>(a));
+
+                foreach (var item in allAppoints)
+                {
+                    /*
+                    app = new DrAppAPI.Models.Appointment()
+                    {
+                        
+                          Id_Appointment = item.Id_Appointment,
+                          Id_User  = item.Id_User,
+                    Clinic = item.Clinic,
+                    Doctor = item.Doctor,
+                    AppointmentTime = item.AppointmentTime,
+                                CreationTime = item.CreationTime,
+                                User = item.User
+                            };
+                    drApps.Appointments.Add(app);
+                    */
+
+
+                    //app = mapper.Map<DrAppAPI.Models.Appointment>(item);
+                    app = Mapper.Map<DrAppAPI.Appointment, DrAppAPI.Models.Appointment>(item);
+                    drApps.Appointments.Add(app);
+
+                }
+                return Ok(drApps);//Ok(drApps.Appointments.ToList()); will NOT give the JSON with parent array of "Appointments"
+                                  //err serialisind  : "The operation cannot be completed because the DbContext has been disposed." : https://stackoverflow.com/questions/13617698/the-operation-cannot-be-completed-because-the-dbcontext-has-been-disposed-error?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
+
+            //fold selected ctrl+M+H
+            //Sample JSON returned is:
+                /*
+                 {
+        "Appointments": [
+            {
+                "Id_Appointment": 1,
+                "Id_User": 1,
+                "Clinic": "test clinic",
+                "Doctor": "Lady Doctor 1",
+                "AppointmentTime": "Wed, 30 May 2018 11:27 AM",
+                "CreationTime": "Wed, 30 May 2018 11:27 AM"
+            },
+            {
+                "Id_Appointment": 2,
+                "Id_User": 1,
+                "Clinic": "Address : 940 progress Ave Toronto",
+                "Doctor": "Lady Doctor 1",
+                "AppointmentTime": "Sun, 20 May 2018 10:27 PM",
+                "CreationTime": "Sun, 20 May 2018 10:27 PM"
+            },
+            {
+                "Id_Appointment": 4005,
+                "Id_User": 2,
+                "Clinic": "test clinic",
+                "Doctor": "Lady Doctor 1",
+                "AppointmentTime": "Fri, 1 Jun 2018 03:34 PM",
+                "CreationTime": "Tue, 22 May 2018 03:35 AM"
+            }
+        ]
+    }*/
+            }
+        }
 
         // POST - update appointment
         //{domain/ip+port}/api/values/UpdateAppoint/5=appoint ID

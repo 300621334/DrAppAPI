@@ -61,3 +61,5 @@ C:\Users\Shafi\Documents\Visual Studio 2015\Projects\DrAppAPI\DrAppAPI\bin\Antlr
 C:\Users\Shafi\Documents\Visual Studio 2015\Projects\DrAppAPI\DrAppAPI\obj\Debug\DrAppAPI.dll
 C:\Users\Shafi\Documents\Visual Studio 2015\Projects\DrAppAPI\DrAppAPI\obj\Debug\DrAppAPI.pdb
 C:\Users\Shafi\Documents\Visual Studio 2015\Projects\DrAppAPI\DrAppAPI\obj\Debug\DrAppAPI.csprojResolveAssemblyReference.cache
+C:\Users\Shafi\Documents\Visual Studio 2015\Projects\DrAppAPI\DrAppAPI\bin\AutoMapper.dll
+C:\Users\Shafi\Documents\Visual Studio 2015\Projects\DrAppAPI\DrAppAPI\bin\AutoMapper.xml
