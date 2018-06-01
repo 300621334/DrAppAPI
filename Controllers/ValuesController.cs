@@ -27,6 +27,7 @@ namespace DrAppAPI.Controllers
 {
     public class ValuesController : ApiController////a WebAPI ctrlr
     {
+
         // GET api/values
         public IEnumerable<string> Get()
         {
@@ -150,7 +151,14 @@ namespace DrAppAPI.Controllers
 
 
                 //Auto Map bw DbContext objs & ViewModel objs(aka DTO = Data Transfer Objects): http://automapper.readthedocs.io/en/latest/Getting-started.html
-                Mapper.Initialize(cfg => cfg.CreateMap<DrAppAPI.Appointment, DrAppAPI.Models.Appointment>());
+                //Mapper.Initialize(cfg => cfg.CreateMap<DrAppAPI.Appointment, DrAppAPI.Models.Appointment>());
+                
+                //3rd party AutoMapper gives err if init in Controller : "Mapper already initialized. You must call Initialize once per application domain/process."
+                //So I used solu here : https://stackoverflow.com/questions/47241708/automapper-mapper-already-initialized-error?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
+                //call this from Global.asax
+                
+
+
                 /*
                 ////or - to use instance instead of Static - do as below:
                 var config = new AutoMapper.MapperConfiguration(cfg => cfg.CreateMap<DrAppAPI.Appointment, DrAppAPI.Models.Appointment>());
@@ -185,40 +193,47 @@ namespace DrAppAPI.Controllers
                     drApps.Appointments.Add(app);
 
                 }
-                return Ok(drApps);//Ok(drApps.Appointments.ToList()); will NOT give the JSON with parent array of "Appointments"
+                /* List of pt's apps return json-arr while for docs it's an obj (not arr) so Android parsing errs..
+                 * To solve that, return it as an arr
+                 */
+                return Ok(new DrAppoints[] { drApps });//Ok(drApps.Appointments.ToList()); will NOT give the JSON with parent array of "Appointments"
                                   //err serialisind  : "The operation cannot be completed because the DbContext has been disposed." : https://stackoverflow.com/questions/13617698/the-operation-cannot-be-completed-because-the-dbcontext-has-been-disposed-error?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
 
-            //fold selected ctrl+M+H
-            //Sample JSON returned is:
+                //fold selected ctrl+M+H
+                //Sample JSON returned is:
                 /*
                  {
-        "Appointments": [
-            {
-                "Id_Appointment": 1,
-                "Id_User": 1,
-                "Clinic": "test clinic",
-                "Doctor": "Lady Doctor 1",
-                "AppointmentTime": "Wed, 30 May 2018 11:27 AM",
-                "CreationTime": "Wed, 30 May 2018 11:27 AM"
-            },
-            {
-                "Id_Appointment": 2,
-                "Id_User": 1,
-                "Clinic": "Address : 940 progress Ave Toronto",
-                "Doctor": "Lady Doctor 1",
-                "AppointmentTime": "Sun, 20 May 2018 10:27 PM",
-                "CreationTime": "Sun, 20 May 2018 10:27 PM"
-            },
-            {
-                "Id_Appointment": 4005,
-                "Id_User": 2,
-                "Clinic": "test clinic",
-                "Doctor": "Lady Doctor 1",
-                "AppointmentTime": "Fri, 1 Jun 2018 03:34 PM",
-                "CreationTime": "Tue, 22 May 2018 03:35 AM"
-            }
-        ]
-    }*/
+                    "Appointments": [
+                        {
+                            "Id_Appointment": 1,
+                            "Id_User": 1,
+                            "Clinic": "test clinic",
+                            "Doctor": "Lady Doctor 1",
+                            "AppointmentTime": "Wed, 30 May 2018 11:27 AM",
+                            "CreationTime": "Wed, 30 May 2018 11:27 AM",
+                            "PatientName": "John Doe"
+                        },
+                        {
+                            "Id_Appointment": 2,
+                            "Id_User": 1,
+                            "Clinic": "Address : 940 progress Ave Toronto",
+                            "Doctor": "Lady Doctor 1",
+                            "AppointmentTime": "Sun, 20 May 2018 10:27 PM",
+                            "CreationTime": "Sun, 20 May 2018 10:27 PM",
+                            "PatientName": "John Doe"
+                        },
+                        {
+                            "Id_Appointment": 4005,
+                            "Id_User": 2,
+                            "Clinic": "test clinic",
+                            "Doctor": "Lady Doctor 1",
+                            "AppointmentTime": "Fri, 1 Jun 2018 03:34 PM",
+                            "CreationTime": "Tue, 22 May 2018 03:35 AM",
+                            "PatientName": "Name1"
+                        }
+                    ]
+                }
+                 */
             }
         }
 

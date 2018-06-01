@@ -21,6 +21,14 @@ namespace DrAppAPI
 
             //when return Ok(List of all appointments) => following line is needed or else err while converting list into JSON
             GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+
+            
+            /*
+             * 3rd party AutoMapper gives err if init in Controller : "Mapper already initialized. You must call Initialize once per application domain/process."
+             * So I used solu here : https://stackoverflow.com/questions/47241708/automapper-mapper-already-initialized-error?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
+             * call this from Global.asax
+             */
+            App_Start.AutoMapperConfig.InitializeAutoMapper();
         }
     }
 }
