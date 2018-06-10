@@ -10,6 +10,19 @@
     <Property Name="Doctor" Type="nvarchar(max)" Nullable="false" />
     <Property Name="AppointmentTime" Type="nvarchar(max)" Nullable="false" />
     <Property Name="CreationTime" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Id_Doc" Type="int" />
+    <Property Name="DRAVAILABLE" Type="nvarchar" MaxLength="1" />
+  </EntityType>
+  <EntityType Name="doctors">
+    <Key>
+      <PropertyRef Name="id_doc" />
+    </Key>
+    <Property Name="id_doc" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Id_User" Type="int" />
+    <Property Name="name" Type="nvarchar" MaxLength="50" />
+    <Property Name="phone" Type="nvarchar" MaxLength="15" />
+    <Property Name="email" Type="nvarchar" MaxLength="30" />
+    <Property Name="specialty" Type="nvarchar(max)" />
   </EntityType>
   <EntityType Name="Users">
     <Key>
@@ -24,6 +37,18 @@
     <Property Name="phone" Type="nvarchar(max)" Nullable="false" />
     <Property Name="role" Type="nvarchar" MaxLength="1" />
   </EntityType>
+  <Association Name="FK__doctors__Id_User__5CD6CB2B">
+    <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+    <End Role="doctors" Type="Self.doctors" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="Id_User" />
+      </Principal>
+      <Dependent Role="doctors">
+        <PropertyRef Name="Id_User" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_UserAppointment">
     <End Role="Users" Type="Self.Users" Multiplicity="1" />
     <End Role="Appointments" Type="Self.Appointments" Multiplicity="*" />
@@ -38,7 +63,12 @@
   </Association>
   <EntityContainer Name="ModelStoreContainer">
     <EntitySet Name="Appointments" EntityType="Self.Appointments" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="doctors" EntityType="Self.doctors" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK__doctors__Id_User__5CD6CB2B" Association="Self.FK__doctors__Id_User__5CD6CB2B">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="doctors" EntitySet="doctors" />
+    </AssociationSet>
     <AssociationSet Name="FK_UserAppointment" Association="Self.FK_UserAppointment">
       <End Role="Users" EntitySet="Users" />
       <End Role="Appointments" EntitySet="Appointments" />

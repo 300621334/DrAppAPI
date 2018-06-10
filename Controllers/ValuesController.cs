@@ -85,35 +85,41 @@ namespace DrAppAPI.Controllers
                 }
             }
         }
-
         
         //POST - new appointment
         [Route("api/values/newAppointment")]
         public IHttpActionResult PostNewAppoint([FromBody] Appointment a)
         {
-            Appointment newAppoint = new DrAppAPI.Appointment() { AppointmentTime = a.AppointmentTime, Clinic=a.Clinic, CreationTime=a.CreationTime, Doctor=a.Doctor, Id_User=a.Id_User};
-            /*
-            //chk if appoint time has another appoint within 30 min before it
-            DateTime timeFrom, timeTo;
-            timeTo = DateTime.Parse(appoint.AppointmentTime);
-            timeFrom = timeTo.AddMinutes(-30);
-            */
+            Appointment newAppoint = new DrAppAPI.Appointment() { AppointmentTime = a.AppointmentTime, Clinic=a.Clinic, CreationTime=a.CreationTime, Doctor=a.Doctor, Id_User=a.Id_User, DRAVAILABLE=a.DRAVAILABLE};
+           
             using (var db = new ModelContainer())
             {
+                //chk if an appointment exists at exact same time for same Dr
+                var isNotAvailable = db.Appointments.Any(app => app.Doctor == a.Doctor && app.AppointmentTime == a.AppointmentTime);
+                if(isNotAvailable)
+                {
+                    return Ok(0);
+                }
+                newAppoint.Id_Doc = db.doctors.Where(d => d.name == a.Doctor).Select(d => d.id_doc).FirstOrDefault();
                 db.Appointments.Add(newAppoint);
                 db.SaveChanges();
-
                 return Ok(newAppoint.Id_Appointment);
+
             }
         }
 
-        //POST - All appoints for a patient
+        //GET - All appoints for a patient
         [Route("api/values/Appointments/{user_id}")]
         public IHttpActionResult GetAllAppoints(int user_id)
         {
             //return Ok("OK");
             using (var db = new ModelContainer())
             {
+                //aft updated model dig to newly added 'doctors' tbl, get err : Error getting value from 'doctors' on 'System.Data.Entity.DynamicProxies.User_08E40257012DB31... & The 'ObjectContent`1' type failed to serialize...
+                db.Configuration.ProxyCreationEnabled = false; //https://stackoverflow.com/questions/13077328/serialization-of-entity-framework-objects-with-one-to-many-relationship/13077670
+
+
+
                 /*Eager Loading : https://msdn.microsoft.com/en-us/library/jj574232(v=vs.113).aspx
                   3 types of loading asso tbl: {1}Eager .Include() {2}Lazy: just access the rel prop {3}Explicit: .Load()
                 */
@@ -129,7 +135,7 @@ namespace DrAppAPI.Controllers
             }
         }
 
-        //POST - All appoints for a Dr
+        //GET - All appoints for a Dr
         [Route("api/values/AppointmentsForDr/{user_id}")]
         public IHttpActionResult GetAllAppointsForDr(int user_id)
         {
@@ -234,6 +240,18 @@ namespace DrAppAPI.Controllers
                     ]
                 }
                  */
+            }
+        }
+
+        //GET - array of doc names to populat dropdown
+        [Route("api/values/doctors")]
+        public IHttpActionResult GetDrNames()
+        {
+            using (var db = new ModelContainer())
+            {
+                //string[] testing = { "aaa", "bbb", "ccc"};
+                var allDrs = db.doctors.Select(d => d.name + " (" + d.specialty + ")").ToArray();// .Users.Where(x => x.Id_User == user_id).Include(u => u.Appointments); //Loada a user along w navigational prop "Appointments"
+                return Ok(allDrs);
             }
         }
 

@@ -15,6 +15,19 @@
           <Property Name="Doctor" Type="nvarchar(max)" Nullable="false" />
           <Property Name="AppointmentTime" Type="nvarchar(max)" Nullable="false" />
           <Property Name="CreationTime" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Id_Doc" Type="int" />
+          <Property Name="DRAVAILABLE" Type="nvarchar" MaxLength="1" />
+        </EntityType>
+        <EntityType Name="doctors">
+          <Key>
+            <PropertyRef Name="id_doc" />
+          </Key>
+          <Property Name="id_doc" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Id_User" Type="int" />
+          <Property Name="name" Type="nvarchar" MaxLength="50" />
+          <Property Name="phone" Type="nvarchar" MaxLength="15" />
+          <Property Name="email" Type="nvarchar" MaxLength="30" />
+          <Property Name="specialty" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="Users">
           <Key>
@@ -29,6 +42,18 @@
           <Property Name="phone" Type="nvarchar(max)" Nullable="false" />
           <Property Name="role" Type="nvarchar" MaxLength="1" />
         </EntityType>
+        <Association Name="FK__doctors__Id_User__5CD6CB2B">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="doctors" Type="Self.doctors" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id_User" />
+            </Principal>
+            <Dependent Role="doctors">
+              <PropertyRef Name="Id_User" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_UserAppointment">
           <End Role="Users" Type="Self.Users" Multiplicity="1" />
           <End Role="Appointments" Type="Self.Appointments" Multiplicity="*" />
@@ -43,7 +68,12 @@
         </Association>
         <EntityContainer Name="ModelStoreContainer">
           <EntitySet Name="Appointments" EntityType="Self.Appointments" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="doctors" EntityType="Self.doctors" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__doctors__Id_User__5CD6CB2B" Association="Self.FK__doctors__Id_User__5CD6CB2B">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="doctors" EntitySet="doctors" />
+          </AssociationSet>
           <AssociationSet Name="FK_UserAppointment" Association="Self.FK_UserAppointment">
             <End Role="Users" EntitySet="Users" />
             <End Role="Appointments" EntitySet="Appointments" />
@@ -60,6 +90,11 @@
             <End Role="User" EntitySet="Users" />
             <End Role="Appointment" EntitySet="Appointments" />
           </AssociationSet>
+          <EntitySet Name="doctors" EntityType="Model.doctor" />
+          <AssociationSet Name="FK__doctors__Id_User__5CD6CB2B" Association="Model.FK__doctors__Id_User__5CD6CB2B">
+            <End Role="User" EntitySet="Users" />
+            <End Role="doctor" EntitySet="doctors" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Appointment">
           <Key>
@@ -72,6 +107,8 @@
           <Property Name="AppointmentTime" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="CreationTime" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
           <NavigationProperty Name="User" Relationship="Model.UserAppointment" FromRole="Appointment" ToRole="User" />
+          <Property Name="Id_Doc" Type="Int32" />
+          <Property Name="DRAVAILABLE" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -85,7 +122,8 @@
           <Property Name="email" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="phone" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
           <NavigationProperty Name="Appointments" Relationship="Model.UserAppointment" FromRole="User" ToRole="Appointment" />
-          <Property Name="role" Type="String" MaxLength="1" />
+          <Property Name="role" Type="String" MaxLength="1" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="doctors" Relationship="Model.FK__doctors__Id_User__5CD6CB2B" FromRole="User" ToRole="doctor" />
         </EntityType>
         <Association Name="UserAppointment">
           <End Type="Model.User" Role="User" Multiplicity="1" />
@@ -99,6 +137,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="doctor">
+          <Key>
+            <PropertyRef Name="id_doc" />
+          </Key>
+          <Property Name="id_doc" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Id_User" Type="Int32" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="phone" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="email" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="User" Relationship="Model.FK__doctors__Id_User__5CD6CB2B" FromRole="doctor" ToRole="User" />
+          <Property Name="specialty" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="FK__doctors__Id_User__5CD6CB2B">
+          <End Type="Model.User" Role="User" Multiplicity="0..1" />
+          <End Type="Model.doctor" Role="doctor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id_User" />
+            </Principal>
+            <Dependent Role="doctor">
+              <PropertyRef Name="Id_User" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -108,7 +170,9 @@
     <EntitySetMapping Name="Appointments">
       <EntityTypeMapping TypeName="IsTypeOf(Model.Appointment)">
         <MappingFragment StoreEntitySet="Appointments">
-          <ScalarProperty Name="Id_Appointment" ColumnName="Id_Appointment" />
+          <ScalarProperty Name="DRAVAILABLE" ColumnName="DRAVAILABLE" />
+                <ScalarProperty Name="Id_Doc" ColumnName="Id_Doc" />
+                <ScalarProperty Name="Id_Appointment" ColumnName="Id_Appointment" />
           <ScalarProperty Name="Id_User" ColumnName="Id_User" />
           <ScalarProperty Name="Clinic" ColumnName="Clinic" />
           <ScalarProperty Name="Doctor" ColumnName="Doctor" />
@@ -131,6 +195,18 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+          <EntitySetMapping Name="doctors">
+            <EntityTypeMapping TypeName="Model.doctor">
+              <MappingFragment StoreEntitySet="doctors">
+                <ScalarProperty Name="specialty" ColumnName="specialty" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="phone" ColumnName="phone" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="Id_User" ColumnName="Id_User" />
+                <ScalarProperty Name="id_doc" ColumnName="id_doc" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping></edmx:Mappings>
   </edmx:Runtime>

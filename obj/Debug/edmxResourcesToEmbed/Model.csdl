@@ -7,6 +7,11 @@
       <End Role="User" EntitySet="Users" />
       <End Role="Appointment" EntitySet="Appointments" />
     </AssociationSet>
+    <EntitySet Name="doctors" EntityType="Model.doctor" />
+    <AssociationSet Name="FK__doctors__Id_User__5CD6CB2B" Association="Model.FK__doctors__Id_User__5CD6CB2B">
+      <End Role="User" EntitySet="Users" />
+      <End Role="doctor" EntitySet="doctors" />
+    </AssociationSet>
   </EntityContainer>
   <EntityType Name="Appointment">
     <Key>
@@ -19,6 +24,8 @@
     <Property Name="AppointmentTime" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
     <Property Name="CreationTime" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
     <NavigationProperty Name="User" Relationship="Model.UserAppointment" FromRole="Appointment" ToRole="User" />
+    <Property Name="Id_Doc" Type="Int32" />
+    <Property Name="DRAVAILABLE" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
   </EntityType>
   <EntityType Name="User">
     <Key>
@@ -32,7 +39,8 @@
     <Property Name="email" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
     <Property Name="phone" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
     <NavigationProperty Name="Appointments" Relationship="Model.UserAppointment" FromRole="User" ToRole="Appointment" />
-    <Property Name="role" Type="String" MaxLength="1" />
+    <Property Name="role" Type="String" MaxLength="1" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="doctors" Relationship="Model.FK__doctors__Id_User__5CD6CB2B" FromRole="User" ToRole="doctor" />
   </EntityType>
   <Association Name="UserAppointment">
     <End Type="Model.User" Role="User" Multiplicity="1" />
@@ -42,6 +50,30 @@
         <PropertyRef Name="Id_User" />
       </Principal>
       <Dependent Role="Appointment">
+        <PropertyRef Name="Id_User" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="doctor">
+    <Key>
+      <PropertyRef Name="id_doc" />
+    </Key>
+    <Property Name="id_doc" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Id_User" Type="Int32" />
+    <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="phone" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+    <Property Name="email" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="User" Relationship="Model.FK__doctors__Id_User__5CD6CB2B" FromRole="doctor" ToRole="User" />
+    <Property Name="specialty" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <Association Name="FK__doctors__Id_User__5CD6CB2B">
+    <End Type="Model.User" Role="User" Multiplicity="0..1" />
+    <End Type="Model.doctor" Role="doctor" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="Id_User" />
+      </Principal>
+      <Dependent Role="doctor">
         <PropertyRef Name="Id_User" />
       </Dependent>
     </ReferentialConstraint>

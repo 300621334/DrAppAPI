@@ -4,6 +4,8 @@
     <EntitySetMapping Name="Appointments">
       <EntityTypeMapping TypeName="IsTypeOf(Model.Appointment)">
         <MappingFragment StoreEntitySet="Appointments">
+          <ScalarProperty Name="DRAVAILABLE" ColumnName="DRAVAILABLE" />
+          <ScalarProperty Name="Id_Doc" ColumnName="Id_Doc" />
           <ScalarProperty Name="Id_Appointment" ColumnName="Id_Appointment" />
           <ScalarProperty Name="Id_User" ColumnName="Id_User" />
           <ScalarProperty Name="Clinic" ColumnName="Clinic" />
@@ -24,6 +26,18 @@
           <ScalarProperty Name="address" ColumnName="address" />
           <ScalarProperty Name="email" ColumnName="email" />
           <ScalarProperty Name="phone" ColumnName="phone" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="doctors">
+      <EntityTypeMapping TypeName="Model.doctor">
+        <MappingFragment StoreEntitySet="doctors">
+          <ScalarProperty Name="specialty" ColumnName="specialty" />
+          <ScalarProperty Name="email" ColumnName="email" />
+          <ScalarProperty Name="phone" ColumnName="phone" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="Id_User" ColumnName="Id_User" />
+          <ScalarProperty Name="id_doc" ColumnName="id_doc" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

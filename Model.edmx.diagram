@@ -8,6 +8,8 @@
         <EntityTypeShape EntityType="Model.Appointment" Width="1.5" PointX="6.25" PointY="1.25" />
         <EntityTypeShape EntityType="Model.User" Width="1.5" PointX="2.875" PointY="1.25" />
         <AssociationConnector Association="Model.UserAppointment" />
+        <EntityTypeShape EntityType="Model.doctor" Width="1.5" PointX="5.125" PointY="4.625" />
+        <AssociationConnector Association="Model.FK__doctors__Id_User__5CD6CB2B" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
