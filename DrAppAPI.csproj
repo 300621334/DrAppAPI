@@ -231,6 +231,7 @@
     </Compile>
     <Compile Include="Models\Appointment.cs" />
     <Compile Include="Models\DrAppoints.cs" />
+    <Compile Include="Models\DrProfile.cs" />
     <Compile Include="Models\UserBio.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="User.cs">

@@ -104,7 +104,6 @@ namespace DrAppAPI.Controllers
                 db.Appointments.Add(newAppoint);
                 db.SaveChanges();
                 return Ok(newAppoint.Id_Appointment);
-
             }
         }
 
@@ -249,8 +248,15 @@ namespace DrAppAPI.Controllers
         {
             using (var db = new ModelContainer())
             {
+                //return arr o DrProfile objs
+
+
+
                 //string[] testing = { "aaa", "bbb", "ccc"};
-                var allDrs = db.doctors.Select(d => d.name + " (" + d.specialty + ")").ToArray();// .Users.Where(x => x.Id_User == user_id).Include(u => u.Appointments); //Loada a user along w navigational prop "Appointments"
+                var allDrs = db.doctors.Select(d => new DrProfile() { email=d.email, id_doc=d.id_doc, Id_User=d.Id_User, name=d.name, phone=d.phone, specialty=d.specialty} /*d.name + " (" + d.specialty + ")"*/).ToArray();// .Users.Where(x => x.Id_User == user_id).Include(u => u.Appointments); //Loada a user along w navigational prop "Appointments"
+
+
+
                 return Ok(allDrs);
             }
         }
