@@ -280,6 +280,7 @@ namespace DrAppAPI.Controllers
                     existingApp.AppointmentTime = updatedApp.AppointmentTime;
                     existingApp.Clinic = updatedApp.Clinic;
                     existingApp.Doctor = updatedApp.Doctor;
+                    existingApp.Id_Doc = updatedApp.Id_Doc;
 
 
                     db.SaveChanges();
