@@ -196,6 +196,23 @@ namespace DrAppAPI.Controllers
             }
         }
 
+        //POST - Delete User
+        [Route("api/values/DeleteUser/{id}")]
+        public IHttpActionResult PostDelUser([FromUri]int id)
+        {
+            using (var db = new ModelContainer())
+            {
+                var existingUser = db.Users.SingleOrDefault(a => a.Id_User == id);
+                if (null != existingUser)
+                {
+                    db.Entry(existingUser).State = EntityState.Deleted;
+                    db.SaveChanges();
+                    return Ok(existingUser.Id_User + " Deleted successfully");
+                }
+                return Ok("Could not DELETE user! - Please call clinic");//fail
+            }
+        }
+
         //POST - new appointment
         [Route("api/values/newAppointment")]
         public IHttpActionResult PostNewAppoint([FromBody] Appointment a)
