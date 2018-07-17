@@ -64,7 +64,87 @@ namespace DrAppAPI.Controllers
             return Ok(0);//login fail
         }
 
-        
+        //GET - search user by part of name
+        [Route("api/values/searchUserByName/{uNameContains}")]
+        public IHttpActionResult GetSearchUsersByName(string uNameContains)
+        {
+            DrAppAPI.Models.UserBio aUserBio = new UserBio();
+            UsersSearched UsersFoundList = new UsersSearched();//a list of many users found as result od search
+            UsersFoundList.UsersFound = new List<UserBio>();
+
+
+            using (ModelContainer db = new ModelContainer())
+            {
+                //loginName contains this string
+                var matchingUsers = db.Users.Where(x => x.loginName.Contains(uNameContains)).ToList();
+                foreach (var u in matchingUsers)
+                {
+                    aUserBio = Mapper.Map<DrAppAPI.User, DrAppAPI.Models.UserBio>(u);
+                    UsersFoundList.UsersFound.Add(aUserBio);
+                }
+                return Ok(new UsersSearched[] { UsersFoundList });
+/*Returns array of UserBio objects e.g.
+[
+    {
+        "UsersFound": [
+            {
+                "Id_User": 1,
+                "nameOfUser": "John Doe",
+                "loginName": "name",
+                "pw": "DnVELRcAZH97k+lj5ivzYQ==",
+                "address": "name",
+                "email": "name@e.e",
+                "phone": "111",
+                "role": "1"
+            },
+            {
+                "Id_User": 2,
+                "nameOfUser": "Name1",
+                "loginName": "Name1",
+                "pw": "Name1",
+                "address": "Name1",
+                "email": "Name1@e.e",
+                "phone": "111",
+                "role": "1"
+            },
+            {
+                "Id_User": 3,
+                "nameOfUser": "Name2",
+                "loginName": "Name2",
+                "pw": "Name2",
+                "address": "Name2",
+                "email": "Name2@e.e",
+                "phone": "222",
+                "role": "1"
+            },
+            {
+                "Id_User": 4,
+                "nameOfUser": "Name3",
+                "loginName": "Name3",
+                "pw": "Name3",
+                "address": "Name3",
+                "email": "Name3@e.e",
+                "phone": "333",
+                "role": "1"
+            },
+            {
+                "Id_User": 5,
+                "nameOfUser": "Name",
+                "loginName": "Name4",
+                "pw": "Name4",
+                "address": "Name",
+                "email": "Name@e.e",
+                "phone": "Name",
+                "role": "1"
+            }
+        ]
+    }
+]
+*/
+
+            }
+        }
+
         //POST - new user biodata
         [Route("api/values/newUser")]
         public IHttpActionResult PostNewUser([FromBody] UserBio u)
@@ -198,7 +278,7 @@ namespace DrAppAPI.Controllers
                     drApps.Appointments.Add(app);
 
                 }
-                /* List of pt's apps return json-arr while for docs it's an obj (not arr) so Android parsing errs..
+                /* List<> of pt's apps return json-arr while for docs it's an obj (not arr) so Android parsing errs..
                  * To solve that, return it as an arr
                  */
                 return Ok(new DrAppoints[] { drApps });//Ok(drApps.Appointments.ToList()); will NOT give the JSON with parent array of "Appointments"

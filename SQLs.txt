@@ -1,0 +1,14 @@
+﻿---------db User----------
+--https://stackoverflow.com/questions/19094970/how-do-i-create-a-new-user-in-a-sql-azure-database
+--[Use Master] doesn't work in Azure so open query on master db directly
+--run following on master
+CREATE LOGIN [david] WITH PASSWORD = 'Password1';--LOGIN is for server (not db)
+--in master create a user
+CREATE USER [david] FROM LOGIN [david];
+--Switch to actual db, and run
+CREATE USER [david] FROM LOGIN [david];--this is db user (NOT server login)
+--now grant permissions by adding user to a role
+EXEC sp_addrolemember N'db_datareader', N'david';
+EXEC sp_addrolemember N'db_datawriter', N'david';
+--remove from a role if needed
+EXEC sp_droprolemember N'db_owner', N'david';
