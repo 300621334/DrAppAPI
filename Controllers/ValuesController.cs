@@ -64,13 +64,13 @@ namespace DrAppAPI.Controllers
             return Ok(0);//login fail
         }
 
-        //GET - search user by part of name
+        //GET - Search user by part of name : http://drappapi.azurewebsites.net/api/values/searchUserByName/doc
         [Route("api/values/searchUserByName/{uNameContains}")]
         public IHttpActionResult GetSearchUsersByName(string uNameContains)
         {
             DrAppAPI.Models.UserBio aUserBio = new UserBio();
-            UsersSearched UsersFoundList = new UsersSearched();//a list of many users found as result od search
-            UsersFoundList.UsersFound = new List<UserBio>();
+            UsersSearched usersFoundList = new UsersSearched();//a list of many users found as result od search
+            usersFoundList.UsersFound = new List<UserBio>();
 
 
             using (ModelContainer db = new ModelContainer())
@@ -80,67 +80,68 @@ namespace DrAppAPI.Controllers
                 foreach (var u in matchingUsers)
                 {
                     aUserBio = Mapper.Map<DrAppAPI.User, DrAppAPI.Models.UserBio>(u);
-                    UsersFoundList.UsersFound.Add(aUserBio);
+                    usersFoundList.UsersFound.Add(aUserBio);
                 }
-                return Ok(new UsersSearched[] { UsersFoundList });
-/*Returns array of UserBio objects e.g.
-[
-    {
-        "UsersFound": [
-            {
-                "Id_User": 1,
-                "nameOfUser": "John Doe",
-                "loginName": "name",
-                "pw": "DnVELRcAZH97k+lj5ivzYQ==",
-                "address": "name",
-                "email": "name@e.e",
-                "phone": "111",
-                "role": "1"
-            },
-            {
-                "Id_User": 2,
-                "nameOfUser": "Name1",
-                "loginName": "Name1",
-                "pw": "Name1",
-                "address": "Name1",
-                "email": "Name1@e.e",
-                "phone": "111",
-                "role": "1"
-            },
-            {
-                "Id_User": 3,
-                "nameOfUser": "Name2",
-                "loginName": "Name2",
-                "pw": "Name2",
-                "address": "Name2",
-                "email": "Name2@e.e",
-                "phone": "222",
-                "role": "1"
-            },
-            {
-                "Id_User": 4,
-                "nameOfUser": "Name3",
-                "loginName": "Name3",
-                "pw": "Name3",
-                "address": "Name3",
-                "email": "Name3@e.e",
-                "phone": "333",
-                "role": "1"
-            },
-            {
-                "Id_User": 5,
-                "nameOfUser": "Name",
-                "loginName": "Name4",
-                "pw": "Name4",
-                "address": "Name",
-                "email": "Name@e.e",
-                "phone": "Name",
-                "role": "1"
-            }
-        ]
-    }
-]
-*/
+                return Ok(/*usersFoundList.UsersFound*/new UsersSearched[] { usersFoundList });
+                /*Returns array of UserBio objects e.g.
+                [
+                    {//obj of class "UsersSearched"
+                        "UsersFound": //a prop inside obj of "UsersSearched"
+                        [
+                            {
+                                "Id_User": 1,
+                                "nameOfUser": "John Doe",
+                                "loginName": "name",
+                                "pw": "DnVELRcAZH97k+lj5ivzYQ==",
+                                "address": "name",
+                                "email": "name@e.e",
+                                "phone": "111",
+                                "role": "1"
+                            },
+                            {
+                                "Id_User": 2,
+                                "nameOfUser": "Name1",
+                                "loginName": "Name1",
+                                "pw": "Name1",
+                                "address": "Name1",
+                                "email": "Name1@e.e",
+                                "phone": "111",
+                                "role": "1"
+                            },
+                            {
+                                "Id_User": 3,
+                                "nameOfUser": "Name2",
+                                "loginName": "Name2",
+                                "pw": "Name2",
+                                "address": "Name2",
+                                "email": "Name2@e.e",
+                                "phone": "222",
+                                "role": "1"
+                            },
+                            {
+                                "Id_User": 4,
+                                "nameOfUser": "Name3",
+                                "loginName": "Name3",
+                                "pw": "Name3",
+                                "address": "Name3",
+                                "email": "Name3@e.e",
+                                "phone": "333",
+                                "role": "1"
+                            },
+                            {
+                                "Id_User": 5,
+                                "nameOfUser": "Name",
+                                "loginName": "Name4",
+                                "pw": "Name4",
+                                "address": "Name",
+                                "email": "Name@e.e",
+                                "phone": "Name",
+                                "role": "1"
+                            }
+                        ]
+                    }
+                ]
+                */
 
             }
         }
@@ -165,8 +166,35 @@ namespace DrAppAPI.Controllers
                 }
             }
         }
-        
 
+        //POST - Edit a User
+        [Route("api/values/UpdateUser/{id_user}")]
+        public IHttpActionResult PostEditUser(int id_user, [FromBody]UserBio updatedUser)// = modified existing appointment
+        {
+            /*
+            //chk if appoint time has another appoint within 30 min before it
+            DateTime timeFrom, timeTo;
+            timeTo = DateTime.Parse(appoint.AppointmentTime);
+            timeFrom = timeTo.AddMinutes(-30);
+            */
+            using (var db = new ModelContainer())
+            {
+                var existingUser = db.Users.SingleOrDefault(a => a.Id_User == id_user);
+                if (null != existingUser)
+                {
+                    existingUser.loginName = updatedUser.loginName;
+                    existingUser.pw = updatedUser.pw;
+                    existingUser.nameOfUser = updatedUser.nameOfUser;
+                    existingUser.phone = updatedUser.phone;
+                    existingUser.email = updatedUser.email;
+                    existingUser.address = updatedUser.address;
+
+                    db.SaveChanges();
+                    return Ok(existingUser.Id_User + " updated successfully");
+                }
+                return Ok("Could not update user! - Please call clinic");//fail
+            }
+        }
 
         //POST - new appointment
         [Route("api/values/newAppointment")]
