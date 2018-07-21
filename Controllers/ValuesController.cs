@@ -198,16 +198,19 @@ namespace DrAppAPI.Controllers
             */
             using (var db = new ModelContainer())
             {
-                //chk if uName already in use
-                if (db.Users.Any(x => x.loginName == updatedUser.loginName))//loginName already exists
-                {
-                    return Ok("User-Name Not Available");
-                }
+                
 
                 //find a user by id
                 var existingUser = db.Users.SingleOrDefault(a => a.Id_User == id_user);
+
                 if (null != existingUser)
                 {
+                    //chk if uName already in use && don't try to compare w one's own loginName 
+                    if (existingUser.loginName != updatedUser.loginName && db.Users.Any(x => x.loginName == updatedUser.loginName))//loginName already exists
+                    {
+                        return Ok("User-Name Not Available");
+                    }
+
                     existingUser.loginName = updatedUser.loginName;
                     existingUser.pw = updatedUser.pw;
                     existingUser.nameOfUser = updatedUser.nameOfUser;
