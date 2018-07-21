@@ -64,7 +64,7 @@ namespace DrAppAPI.Controllers
             return Ok(0);//login fail
         }
 
-        //GET - Search user by part of name : http://drappapi.azurewebsites.net/api/values/searchUserByName/doc
+        //GET - Search user(s) by part of user-name : http://drappapi.azurewebsites.net/api/values/searchUserByName/doc
         [Route("api/values/searchUserByName/{uNameContains}")]
         public IHttpActionResult GetSearchUsersByName(string uNameContains)
         {
@@ -146,6 +146,25 @@ namespace DrAppAPI.Controllers
             }
         }
 
+        [Route("api/values/getuserdetail/{id}")]
+        public IHttpActionResult GetUserDetails(string id)
+        {
+            int Id_User=0;
+            bool isIdAnInt = int.TryParse(id, out Id_User);
+            if (!isIdAnInt) return Ok("");
+
+            UserBio user = new UserBio();
+            using (var db = new ModelContainer())
+            {
+                var u = db.Users.Where(x => x.Id_User == Id_User).FirstOrDefault();
+                user = Mapper.Map<DrAppAPI.User, DrAppAPI.Models.UserBio>(u);
+            }
+
+            if (user == null) return Ok("");
+
+            return Ok(user);
+        }
+
         //POST - new user biodata
         [Route("api/values/newUser")]
         public IHttpActionResult PostNewUser([FromBody] UserBio u)
@@ -179,6 +198,13 @@ namespace DrAppAPI.Controllers
             */
             using (var db = new ModelContainer())
             {
+                //chk if uName already in use
+                if (db.Users.Any(x => x.loginName == updatedUser.loginName))//loginName already exists
+                {
+                    return Ok("User-Name Not Available");
+                }
+
+                //find a user by id
                 var existingUser = db.Users.SingleOrDefault(a => a.Id_User == id_user);
                 if (null != existingUser)
                 {
