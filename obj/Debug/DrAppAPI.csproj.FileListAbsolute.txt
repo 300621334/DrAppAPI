@@ -15,6 +15,7 @@ C:\Users\Shafi\Documents\Visual Studio 2015\Projects\DrAppAPI\DrAppAPI\bin\DrApp
 C:\Users\Shafi\Documents\Visual Studio 2015\Projects\DrAppAPI\DrAppAPI\bin\DrAppAPI.dll
 C:\Users\Shafi\Documents\Visual Studio 2015\Projects\DrAppAPI\DrAppAPI\bin\DrAppAPI.pdb
 C:\Users\Shafi\Documents\Visual Studio 2015\Projects\DrAppAPI\DrAppAPI\bin\Antlr3.Runtime.dll
+C:\Users\Shafi\Documents\Visual Studio 2015\Projects\DrAppAPI\DrAppAPI\bin\AutoMapper.dll
 C:\Users\Shafi\Documents\Visual Studio 2015\Projects\DrAppAPI\DrAppAPI\bin\EntityFramework.dll
 C:\Users\Shafi\Documents\Visual Studio 2015\Projects\DrAppAPI\DrAppAPI\bin\EntityFramework.SqlServer.dll
 C:\Users\Shafi\Documents\Visual Studio 2015\Projects\DrAppAPI\DrAppAPI\bin\Microsoft.AI.Agent.Intercept.dll
@@ -38,6 +39,7 @@ C:\Users\Shafi\Documents\Visual Studio 2015\Projects\DrAppAPI\DrAppAPI\bin\Syste
 C:\Users\Shafi\Documents\Visual Studio 2015\Projects\DrAppAPI\DrAppAPI\bin\System.Web.WebPages.dll
 C:\Users\Shafi\Documents\Visual Studio 2015\Projects\DrAppAPI\DrAppAPI\bin\System.Web.WebPages.Razor.dll
 C:\Users\Shafi\Documents\Visual Studio 2015\Projects\DrAppAPI\DrAppAPI\bin\WebGrease.dll
+C:\Users\Shafi\Documents\Visual Studio 2015\Projects\DrAppAPI\DrAppAPI\bin\AutoMapper.xml
 C:\Users\Shafi\Documents\Visual Studio 2015\Projects\DrAppAPI\DrAppAPI\bin\EntityFramework.xml
 C:\Users\Shafi\Documents\Visual Studio 2015\Projects\DrAppAPI\DrAppAPI\bin\EntityFramework.SqlServer.xml
 C:\Users\Shafi\Documents\Visual Studio 2015\Projects\DrAppAPI\DrAppAPI\bin\Microsoft.AI.DependencyCollector.xml
@@ -60,6 +62,3 @@ C:\Users\Shafi\Documents\Visual Studio 2015\Projects\DrAppAPI\DrAppAPI\bin\Syste
 C:\Users\Shafi\Documents\Visual Studio 2015\Projects\DrAppAPI\DrAppAPI\bin\Antlr3.Runtime.pdb
 C:\Users\Shafi\Documents\Visual Studio 2015\Projects\DrAppAPI\DrAppAPI\obj\Debug\DrAppAPI.dll
 C:\Users\Shafi\Documents\Visual Studio 2015\Projects\DrAppAPI\DrAppAPI\obj\Debug\DrAppAPI.pdb
-C:\Users\Shafi\Documents\Visual Studio 2015\Projects\DrAppAPI\DrAppAPI\obj\Debug\DrAppAPI.csprojResolveAssemblyReference.cache
-C:\Users\Shafi\Documents\Visual Studio 2015\Projects\DrAppAPI\DrAppAPI\bin\AutoMapper.dll
-C:\Users\Shafi\Documents\Visual Studio 2015\Projects\DrAppAPI\DrAppAPI\bin\AutoMapper.xml

@@ -229,9 +229,11 @@ namespace DrAppAPI.Controllers
         [Route("api/values/DeleteUser/{id}")]
         public IHttpActionResult PostDelUser([FromUri]int id)
         {
+            List<int> Dr_Admin_Ids = new List<int>() {1, 2, 3, 111, 222, 333, 444, 999999};//these Ids must NOT be deleted
+
             using (var db = new ModelContainer())
             {
-                var existingUser = db.Users.SingleOrDefault(a => a.Id_User == id);
+                var existingUser = db.Users.SingleOrDefault(a => a.Id_User == id && !Dr_Admin_Ids.Contains(id));
                 if (null != existingUser)
                 {
                     db.Entry(existingUser).State = EntityState.Deleted;
